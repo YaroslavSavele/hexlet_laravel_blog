@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,4 +19,5 @@ Route::get('/', function () {
 });
 
 Route::get('about', [\App\Http\Controllers\PageController::class, 'about']);
+Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
 
