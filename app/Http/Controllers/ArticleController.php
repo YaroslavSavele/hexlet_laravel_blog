@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArticleUpdateRequest;
 use App\Models\Article;
 use Illuminate\Http\Request;
 
@@ -31,13 +32,34 @@ class ArticleController extends Controller
     {
         $data = $this->validate($request, [
             'name' => 'required|unique:articles',
-            'body' => 'required|min:1000',
+            'body' => 'required|min:100',
         ]);
 
         $article = new Article();
         $article->fill($data);
         $article->save();
-        session()->flash('message', 'Post successfully createdз.');
+        session()->flash('message', 'Post successfully created.');
+
+        return redirect()->route('articles.index');
+    }
+
+    public function edit($id)
+    {
+        $article = Article::findOrFail($id);
+        return view('article.edit', compact('article'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $article = Article::findOrFail($id);
+        $data = $this->validate($request, [
+            'name' => 'required|unique:articles,name,' . $article->id,
+            'body' => 'required|min:100',
+        ]);
+
+        $article->fill($data);
+        $article->save();
+        session()->flash('message', 'Post successfully updated.');
 
         return redirect()->route('articles.index');
     }
